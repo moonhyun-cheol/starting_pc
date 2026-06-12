@@ -1,0 +1,10 @@
+# nested project (separate repo)
+재무관리 프로그램/
+
+# setup logs
+setup-dev-*.log
+
+# secrets
+credentials.json
+token.json
+*.env
