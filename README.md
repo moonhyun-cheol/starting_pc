@@ -34,6 +34,7 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 | `setup-dev-extensions.ps1` | VS Code / Cursor 확장 |
 | `setup-dev-python.ps1` | Python pip 패키지 |
 | `setup-dev-config.ps1` | Git 설정, gh 로그인 안내 |
+| `setup-dev-bloat.ps1` | Microsoft 번들 앱 제거 (Copilot, Xbox, OneDrive 등) |
 | `새PC-환경구축-설명서.md` | 전체 가이드 |
 
 ---
@@ -51,6 +52,7 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 ```powershell
 .\setup-dev.ps1                          # All (Post 제외, 재부팅 후 Post)
+.\setup-dev.ps1 -Phase Bloat             # 불필요 앱만 제거
 .\setup-dev.ps1 -Phase Core,Utils,Post   # 필수만
 .\setup-dev.ps1 -Phase VS                # Visual Studio만
 ```

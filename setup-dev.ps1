@@ -16,16 +16,18 @@
   VS        = Visual Studio 2022 Community + C++ 워크로드
   Remote    = RustDesk, Discord, KakaoTalk
   Post      = uv, rustup, 확장, Python 패키지, Git 설정 (재부팅 후 권장)
+  Bloat     = Microsoft 번들 앱 제거 (Copilot, Xbox, OneDrive 등)
 
 .EXAMPLE
   .\setup-dev.ps1
   .\setup-dev.ps1 -Phase Core,Utils
+  .\setup-dev.ps1 -Phase Bloat
   .\setup-dev.ps1 -Phase Post -SkipPython
 #>
 
 [CmdletBinding()]
 param(
-    [ValidateSet('All', 'Core', 'Utils', 'Docker', 'AI', 'VS', 'Remote', 'Post')]
+    [ValidateSet('All', 'Bloat', 'Core', 'Utils', 'Docker', 'AI', 'VS', 'Remote', 'Post')]
     [string[]]$Phase = @('All'),
 
     [switch]$SkipExtensions,
@@ -152,6 +154,16 @@ function Invoke-RemotePhase {
     Install-Winget 'Kakao.KakaoTalk' '카카오톡'
 }
 
+function Invoke-BloatPhase {
+    Write-Log '=== Phase: Bloat (불필요 앱 제거) ===' 'White'
+    $bloatScript = Join-Path $ScriptDir 'setup-dev-bloat.ps1'
+    if (-not (Test-Path $bloatScript)) {
+        Write-Log 'setup-dev-bloat.ps1 없음 — 건너뜀' 'Yellow'
+        return
+    }
+    & $bloatScript -NoLog:$NoLog
+}
+
 function Invoke-PostPhase {
     Write-Log '=== Phase: Post (도구·확장·패키지) ===' 'White'
 
@@ -220,6 +232,7 @@ if (-not (Test-Admin)) {
 
 Test-Winget
 
+if (Test-Phase 'Bloat')    { Invoke-BloatPhase }
 if (Test-Phase 'Core')     { Invoke-CorePhase }
 if (Test-Phase 'Utils')    { Invoke-UtilsPhase }
 if (Test-Phase 'Docker')   { Invoke-DockerPhase }
